@@ -1,4 +1,4 @@
 int main(int argc, char const *argv[]) {
-    printf("%s\n", );
+    printf("%ss\n", );
     return 0;
 }
