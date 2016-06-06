@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "y.tab.h"
+#include "linkedlist.h"
+
+//List* list;
+
 
 %}
 
@@ -44,13 +48,13 @@ else	{ return ELSE; }
 int 	{ return INT; }
 float	{ return FLOAT; }
 
-{digito}+	{ 
-		  yylval.num.type = 0;		
+{digito}+	{
+		  yylval.num.type = 0;
 		  strcpy(yylval.num.dir, yytext);
  		  return NUM;
 		}
 
-[a-zA-Z_][a-zA-Z0-9_]*	{ 
+[a-zA-Z_][a-zA-Z0-9_]*	{
 			  strcpy(yylval.id, yytext);
 			  return ID;
 			}
@@ -66,4 +70,3 @@ float	{ return FLOAT; }
 int yywrap(){
 	return 1;
 }
-

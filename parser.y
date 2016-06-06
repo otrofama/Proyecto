@@ -53,7 +53,7 @@ int w;
 		int type;
 	}type;
 	char op[3];
-	
+
 }
 
 
@@ -74,8 +74,8 @@ int w;
 %left<op> MUL DIV MOD
 %right NOT
 %nonassoc LPAR RPAR LCOR RCOR
-%nonassoc IFX  
-%nonassoc ELSE  
+%nonassoc IFX
+%nonassoc ELSE
 
 
 %type<cond> boolean
@@ -88,8 +88,8 @@ int w;
 
 %%
 
-program: decl sents {	
-					strcat($2.code, "halt");				
+program: decl sents {
+					strcat($2.code, "halt");
 					fprintf(output,"%s",$2.code);
 					//free($1.code);
 			};
@@ -103,7 +103,7 @@ type: base{t = $1.type; w = $1.width;} array;
 base: INT {$$.type = 0; $$.width = 4;}
 		  | FLOAT {$$.type = 1; $$.width = 8;};
 
-array: LCOR NUM RCOR array { 
+array: LCOR NUM RCOR array {
 				$$.type = insert_type("array", $4.type, atoi($2.dir));
 				$$.width = atoi($2.dir) * $4.width;
 			}
@@ -115,26 +115,26 @@ sents : sents sent {
 				strcpy($$.code, $1.code);
 				strcat($$.code, $2.code);
 				strcat($$.code, $2.next);
-				strcat($$.code, ":");				
+				strcat($$.code, ":");
 			}
 			| sent{
 				strcat($1.code, $1.next);
-				strcat($1.code, ":");			
+				strcat($1.code, ":");
 			};
 
 sent: ID ASIG exp PC { newLabel(); strcpy($$.next,label);
-											 //int len = strlen($1) +1; 
+											 //int len = strlen($1) +1;
 											 //$$.code = (char*) malloc(len*sizeof(char));
 											 strcpy($$.code, $3.code);
 											 strcat($$.code, $1);
 											 strcat($$.code, " = ");
 											 strcat($$.code, $3.dir);
 											 strcat($$.code, "\n");
-											 
+
 										}
 		/* $1   $2   $3     $4   $5*/
-	| WHILE LPAR boolean RPAR sent {			
-			strcpy($$.next, $3.lfalse);			
+	| WHILE LPAR boolean RPAR sent {
+			strcpy($$.next, $3.lfalse);
 			//int len = strlen($5.next)+1;
 			//$$.code = (char*) malloc(len*sizeof(char));
 			strcpy($$.code, $5.next);
@@ -160,16 +160,16 @@ sent: ID ASIG exp PC { newLabel(); strcpy($$.next,label);
 			strcat($$.code, $3.ltrue);
 			strcat($$.code, ":");
 			strcat($$.code, $5.code);
-			strcat($$.code, $7.code);			
+			strcat($$.code, $7.code);
 		}
 
-		
+
 ;
 
 
 sentp: ELSE sent {
 					strcpy($$.next, $2.next);
-				
+
 					strcpy($$.code, "goto ");
 					strcat($$.code, $2.next);
 					strcat($$.code, "\n");
@@ -181,18 +181,18 @@ sentp: ELSE sent {
 			| %prec IFX {
 					strcpy($$.next, "");
 					strcpy($$.code, $<sent>0.next);
-					strcat($$.code, ":");					
+					strcat($$.code, ":");
 				};
 
 boolean : boolean OR boolean
 			{
-				strcpy($$.ltrue, $1.ltrue); 
-				strcat($$.ltrue, ":"); 
+				strcpy($$.ltrue, $1.ltrue);
+				strcat($$.ltrue, ":");
 				strcat($$.ltrue, $3.ltrue);
 
-				strcpy($$.lfalse, $3.lfalse);	
+				strcpy($$.lfalse, $3.lfalse);
 				//int len = strlen($1.code) +1;
-				//$$.code = (char*) malloc(len*sizeof(char));	
+				//$$.code = (char*) malloc(len*sizeof(char));
 				strcpy($$.code, $1.code);
 				strcat($$.code, $1.lfalse);
 				strcat($$.code, ": ");
@@ -202,13 +202,13 @@ boolean : boolean OR boolean
 			}
 		| boolean AND boolean
 			{
-				strcpy($$.lfalse, $1.lfalse); 
-				strcat($$.lfalse, ":"); 
+				strcpy($$.lfalse, $1.lfalse);
+				strcat($$.lfalse, ":");
 				strcat($$.lfalse, $3.lfalse);
 
-				strcpy($$.ltrue, $3.ltrue);	
+				strcpy($$.ltrue, $3.ltrue);
 				//int len = strlen($1.code) +1;
-				//$$.code = (char*) malloc(len*sizeof(char));	
+				//$$.code = (char*) malloc(len*sizeof(char));
 				strcpy($$.code, $1.code);
 				strcat($$.code, $1.ltrue);
 				strcat($$.code, ": ");
@@ -239,11 +239,11 @@ boolean : boolean OR boolean
 				strcpy($$.code, "goto ");
 				strcat($$.code, $$.lfalse);
 				strcat($$.code, "\n");
-		}		
+		}
 		| exp oprel exp{
 				newLabel();		strcpy($$.ltrue, label);
 				newLabel();		strcpy($$.lfalse, label);
-				strcpy($$.code, $1.code);				
+				strcpy($$.code, $1.code);
 				strcat($$.code, $3.code);
 				strcat($$.code, "if ");
 				strcat($$.code, $1.dir);
@@ -255,11 +255,11 @@ boolean : boolean OR boolean
 				strcat($$.code, "goto ");
 				strcat($$.code, $$.lfalse);
 				strcat($$.code, "\n");
-		}	
+		}
 ;
 
 
-oprel : GT { strcpy($$, $1);} 
+oprel : GT { strcpy($$, $1);}
 			| GE { strcpy($$, $1);}
 			| LT { strcpy($$, $1);}
 			| LE { strcpy($$, $1);}
