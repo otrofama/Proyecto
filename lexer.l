@@ -2,10 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "y.tab.h"
-#include "linkedlist.h"
-
+#include "symboltable.h"
+#include <string.h>
 //List* list;
-
 
 %}
 
@@ -67,6 +66,7 @@ float	{ return FLOAT; }
 
 %%
 
-int yywrap(){
-	return 1;
+int yywrap()
+{
+    return 1;
 }

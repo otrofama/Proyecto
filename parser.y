@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "typetable.h"
+//#include "typetable.h"
 
 char label[100];
 char temp[100];
@@ -23,8 +23,8 @@ int t;
 int w;
 %}
 
-%union{
-
+%union
+{
 	char id[100];
 
 	struct{
@@ -104,7 +104,7 @@ base: INT {$$.type = 0; $$.width = 4;}
 		  | FLOAT {$$.type = 1; $$.width = 8;};
 
 array: LCOR NUM RCOR array {
-				$$.type = insert_type("array", $4.type, atoi($2.dir));
+				//$$.type = insert_type("array", $4.type, atoi($2.dir));
 				$$.width = atoi($2.dir) * $4.width;
 			}
 		| {$$.type = t; $$.width = w;};
@@ -343,25 +343,33 @@ void yyerror(){
 }
 
 
-int main(int argc, char** argv){
+int main(int argc, char** argv)
+{
 	FILE *file;
-	char name[100];
+	//char name[100];
+	char* name;
 
-	if(argc >1){
+	if(argc >1)
+	{
 		file = fopen(argv[1], "r");
-		if(!file){
+		if(!file)
+		{
 			printf("No se pudo abrir el archivo\n");
 			exit(0);
 		}
+		name = (char*)malloc(2*sizeof(char));
 		strcpy(name, argv[1]);
 		strcat(name, ".ci");
 		output = fopen(name,"w");
 		yyin = file;
+		yyparse();
+		fclose(output);
+		fclose(yyin);
+	}
+	else
+	{
+		printf("No se ingresó archivo.");
 	}
 
-
-	yyparse();
-	fclose(output);
-	fclose(yyin);
 	return 0;
 }
