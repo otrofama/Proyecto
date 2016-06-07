@@ -4,7 +4,7 @@
 #include "y.tab.h"
 #include "symboltable.h"
 #include <string.h>
-//List* list;
+//Symbols* symbols;
 
 %}
 
