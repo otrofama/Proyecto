@@ -98,5 +98,14 @@ void create_type_table(Ttable* table)
 	type t_doble = create_type(3,-1,16,-1);*/
 }
 
-
+int contTstack;
+void push_type(Ttable table)
+{
+	Tstack[contTstack] = table;
+	contTstack++;
+}
+void pop_type()
+{
+	
+}
 #endif
