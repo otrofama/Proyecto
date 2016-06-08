@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include "symboltable.h"
-#include "stack.h"
+//#include "stack.h"
 
 
 int main(int argc, char const *argv[])
 {
+	#if 0
 	Stack *stack=NULL;
 	initialise(stack);
-	#if 0
 	Symbols* symbols = NULL;
 	symbols = init(symbols);
 	init_symbols(symbols);
@@ -24,6 +24,7 @@ int main(int argc, char const *argv[])
 
 	return 0;
 }
+#if 0
 void initialise(Stack *s)
 {
 // this function is to initialise the stack
@@ -150,3 +151,4 @@ void print(Symbols* symbols)
 		tmp = tmp->next;
 	}
 }
+#endif
