@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "symboltable.h"
+//#include "symboltable.h"
+#include "typetable.h"
 //#include "stack.h"
 
 
