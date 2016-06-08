@@ -74,56 +74,48 @@ struct _type_table
 
 type create_type(int type,int dim,int width,int base);
 Ttable Tstack[TAM_TTABLE];
-//int insert_type(Ttable* table,type t);
-int insert_type(Ttable table,type t);
-int getWidthElement(int i);
-//void create_type_table(Ttable* table);
-void create_type_table(Ttable table);
-void push_type(Ttable table);
+int insert_type(int table,type t);
+int getWidthElement(int i,int table);
+int getTypeBase(int i,int table);
+void create_type_table(Ttable* table);
+void push_type();
 void pop_type();
 
-int insert_type(Ttable table,type t)
+int insert_type(int table,type t)
 {
-	//table.t[cont]=t;
-	table.t[table.cont]=t;
-	table.cont++;
-	return table.cont-1;
+	Tstack[table].t[Tstack[table].cont]=t;
+	Tstack[table].cont++;
+	return Tstack[table].cont-1;
 }
 
-type create_type(int type,int dim,int width,int base)
+type create_type(int type1,int dim,int width,int base)
 {
 	type tmp;
-	tmp.type=type;
+	tmp.type=type1;
 	tmp.dim=dim;
 	tmp.width=width;
 	tmp.base=base;
 	return tmp;
 }
 
-//int insert_type(Ttable* table,type t)
-
-
-
-//void create_type_table(Ttable* table)
-void create_type_table(Ttable table)
+void create_type_table(Ttable* table)
 {
+	//falta completar
 	type t_char = create_type(0,-1,1,-1);
 	type t_int = create_type(1,-1,4,-1);
-	type t_float = create_type(1,-1,8,-1);
-	type t_double = create_type(2,-1,16,-1);
-	type t_array = create_type(3,-1,1,-1);
-	insert_type(table,t_int);
-	insert_type(table,t_float);
-	insert_type(table,t_double);
-	insert_type(table,t_array);
-	insert_type(table,t_char);
-	/*type t_float = create_type(2,-1,8,-1);
-	type t_doble = create_type(3,-1,16,-1);*/
+	type t_float = create_type(2,-1,8,-1);
+	type t_double = create_type(3,-1,16,-1);
+	table->t[0]= t_char;
+	table->t[1]= t_int;
+	table->t[2]= t_float;
+	table->t[3]= t_double;
+	table->cont = 4;
 }
 
-void push_type(Ttable table)
+void push_type()
 {
-	Tstack[contTstack] = table;
+	//create_type_table(Tstack[contTstack].cont);
+	create_type_table(&Tstack[contTstack]);
 	contTstack++;
 }
 void pop_type()
@@ -132,13 +124,14 @@ void pop_type()
 	contTstack--;
 }
 
-int getTypeBase(int i)
+int getTypeBase(int i,int table)
 {
-	return Tstack[contTstack-1].t[i].base;
+	return Tstack[table].t[i].base;
 }
-int getWidthElement(int i)
+
+int getWidthElement(int i,int table)
 {
-	return Tstack[contTstack-1].t[i].width;
+	return Tstack[table].t[i].width;
 }
 
 #endif

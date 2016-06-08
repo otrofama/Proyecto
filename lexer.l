@@ -46,6 +46,11 @@ else	{ return ELSE; }
 	/* Palabras reservadas */
 int 	{ return INT; }
 float	{ return FLOAT; }
+char	{return CHAR; }
+double 	{return DOUBLE; }
+define	{return DEFINE;}
+
+
 
 {digito}+	{
 		  yylval.num.type = 0;

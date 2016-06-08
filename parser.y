@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 //#include "typetable.h"
+int c_w;
+int t_w;
+int t,w;
 
 char label[100];
 char temp[100];
@@ -60,8 +63,9 @@ int w;
 
 %token WHILE IF
 %token TRUE FALSE
-%token INT FLOAT
+%token INT FLOAT DOUBLE CHAR
 %token PC COMA
+%token DEFINE
 %token<id> ID;
 %token<num> NUM;
 
@@ -82,7 +86,7 @@ int w;
 %type<sent> sent sentp sents
 %type<exp> exp term factor
 %type<op> oprel opadd opmul
-%type<type> base array
+%type<type> type base array
 
 %start program
 
@@ -94,14 +98,29 @@ program: decl sents {
 					//free($1.code);
 			};
 
+decl: decl type {c_w=$2.type; c_w=$2.width;} list_var PC | ;
 
-decl: decl type list_var PC | ;
+
+declf: declf DEFINE type ID LPAR F RPAR LCOR Ls RCOR | ;
 
 
-type: base{t = $1.type; w = $1.width;} array;
+
+
+
+
+
+
+
+
+
+type: base{t = $1.type; w = $1.width;} array {
+	$$.type=$3.type;$$.width=$3.width;
+};
 
 base: INT {$$.type = 0; $$.width = 4;}
-		  | FLOAT {$$.type = 1; $$.width = 8;};
+	| FLOAT {$$.type = 1; $$.width = 8;}
+	| DOUBLE {$$.type=2; $$.width=16;}
+	| CHAR {$$.type=3; $$.width=1;};
 
 array: LCOR NUM RCOR array {
 				//$$.type = insert_type("array", $4.type, atoi($2.dir));
@@ -115,7 +134,7 @@ sents : sents sent {
 				strcpy($$.code, $1.code);
 				strcat($$.code, $2.code);
 				strcat($$.code, $2.next);
-				strcat($$.code, ":");
+				strcat($$.code, ":");375
 			}
 			| sent{
 				strcat($1.code, $1.next);
