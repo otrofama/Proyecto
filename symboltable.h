@@ -9,7 +9,6 @@
 #define TAM_SYM_TABLE 100
 #define TAM_PILA 10
 
-/////////////////////////////////////////////////////////////77
 int i;
 int contSstack;
 typedef struct _symbol_table Stable;
@@ -37,13 +36,10 @@ struct _symbol_table
 Stable Sstack[TAM_PILA];
 
 symbol create_symbol(char* id,int type,int typeVar,int dir, params param);
-//int insert_symbol(symbol s);
 int insert_symbol(int table,symbol s);
 int get_Symbol(char* id,int table);
-
 params getParams(char* id,int table);
 void setParams(char* id,params p,int table);
-
 int getTypeSymbol(char* id,int table);
 int getTypeVar(char* id,int table);
 void push_symbol();
@@ -60,7 +56,6 @@ symbol create_symbol(char* id,int type,int typeVar,int dir, params param)
 	return tmp;
 }
 
-//int insert_symbol(symbol s)
 int insert_symbol(int table,symbol s)
 {
 	int i;
@@ -122,4 +117,5 @@ void pop_symbol()
 	Sstack[contSstack-1].cont = 0;
 	contSstack--;
 }
+
 #endif
