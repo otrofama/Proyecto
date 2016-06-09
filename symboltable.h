@@ -10,7 +10,7 @@
 #define TAM_PILA 10
 
 int i;
-int contSstack;
+int contSstack=0;
 typedef struct _symbol_table Stable;
 typedef struct _symbol symbol;
 typedef struct _params params;
@@ -60,6 +60,7 @@ int insert_symbol(int table,symbol s)
 {
 	int i;
 	i=get_Symbol(Sstack[table].s[Sstack[table].cont].id,contSstack);
+	printf("%dasd\n",i );
 	if (i != -1 )
 	{
 		Sstack[table].s[Sstack[table].cont] = s;
