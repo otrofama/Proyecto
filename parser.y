@@ -11,7 +11,7 @@ char temp[100];
 
 void newTemp();
 int cTemp;
-//comm
+//commasdewr
 void newLabel();
 int cLabel;
 
