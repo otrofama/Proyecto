@@ -81,8 +81,9 @@ int w;
 
 
 %type<cond> boolean
-%type<sent> sent sentp sents
-%type<exp> exp term factor
+%type<sent> sent sentp sents L
+//%type<exp> exp term factor
+%type<exp> exp term factor idef
 %type<op> oprel opadd opmul
 %type<type> type base array
 
@@ -148,7 +149,8 @@ sents : sents sent {
 				strcat($1.code, ":");
 			};
 
-sent: ID ASIG exp PC { newLabel(); strcpy($$.next,label);
+sent: /*ID ASIG exp PC {
+		newLabel(); strcpy($$.next,label);
 		 //int len = strlen($1) +1;
 		 //$$.code = (char*) malloc(len*sizeof(char));
 		 strcpy($$.code, $3.code);
@@ -156,9 +158,10 @@ sent: ID ASIG exp PC { newLabel(); strcpy($$.next,label);
 		 strcat($$.code, " = ");
 		 strcat($$.code, $3.dir);
 		 strcat($$.code, "\n");
-	}
+	}*/
 		/* $1   $2   $3     $4   $5*/
-	| WHILE LPAR boolean RPAR sent {
+	|
+	WHILE LPAR boolean RPAR sent {
 			strcpy($$.next, $3.lfalse);
 			//int len = strlen($5.next)+1;
 			//$$.code = (char*) malloc(len*sizeof(char));
@@ -175,7 +178,30 @@ sent: ID ASIG exp PC { newLabel(); strcpy($$.next,label);
 			//free($5.code);
 			//printf("goto %s\n",$1.begin);
     }
-	| IF LPAR boolean RPAR sent { strcpy($<sent>$.next, $3.lfalse);} sentp
+	| LCOR sents RCOR {
+	//| LCOR L RCOR {
+		strcpy($$.next,$1.next);
+		strcpy($$.code,$1.code);
+	}
+	//| IF LPAR boolean RPAR sent {
+	| IF LPAR boolean RPAR sent sentp {
+		//strcpy($<sent>$.next, $3.lfalse);
+		strcpy($6.false, $3.lfalse);
+		strcpy($$.next, $5.next);
+		strcat($$.code, ":");
+		strcpy($$.next, $5.next);
+		strcat($$.next,$6.next);
+
+		strcat($$.next,$3.code);
+		strcpy($$.code,$3.ltrue);
+		strcat($$.code, ":");
+		strcat($$.code,$5.code);
+		strcat($$.code, "goto");
+		strcat($$.code,$6.code);
+
+	}
+
+	| /*sentp
 		{
 			strcpy($$.next, $5.next);
 			strcat($$.next, ":");
@@ -186,7 +212,7 @@ sent: ID ASIG exp PC { newLabel(); strcpy($$.next,label);
 			strcat($$.code, ":");
 			strcat($$.code, $5.code);
 			strcat($$.code, $7.code);
-		};
+		};*/
 
 
 sentp: ELSE sent {
@@ -200,11 +226,30 @@ sentp: ELSE sent {
 					strcat($$.code, $2.code);
 				}
 
-			| %prec IFX {
+			| RETURN exp PC{
+				newLabel();
+				strcpy($$.next,label);
+				strcpy($$.code,$2.code);
+				strcpy($$.code,"return ");
+				strcat($$.code,$2.dir);
+				strcat($$.code,"\n");
+
+				} /*%prec IFX {
 					strcpy($$.next, "");
 					strcpy($$.code, $<sent>0.next);
 					strcat($$.code, ":");
-				};
+				}*/;
+idef: A {strcpy($$.dir,$1.base);
+		strcat($$.dir,"=");
+	}
+
+
+oprel: ASIG {strcpy($$.op,"=");}
+		| MASIG {strcpy($$.op,"+=");}
+		| MESIG {strcpy($$.op,"-=");}
+		| DIVASIG {strcpy($$.op,"/=");}
+		| MULASIG {strcpy($$.op,"*=");}
+		| MODASIG {strcpy($$.op,"%=");};
 
 boolean : boolean OR boolean
 			{
