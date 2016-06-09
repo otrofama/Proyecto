@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 //#include "typetable.h"
-int t,w,c_t,c_w,offset=0;
-int stackoffset[50];
-int spoffset=0;
+int c_w;
+int t_w;
+int t,w;
+
 char label[100];
 char temp[100];
 
@@ -58,7 +59,9 @@ int w;
 
 }
 
-%token WHILE IF
+
+
+%token WHILE IF ELSE
 %token TRUE FALSE
 %token INT FLOAT DOUBLE CHAR
 %token PC COMA
@@ -66,7 +69,7 @@ int w;
 %token<id> ID;
 %token<num> NUM;
 
-%left ASIG MASIG MEASIG DIVASIG MULASIG MODASIG
+%left ASIG MASIG
 %left OR
 %left AND
 %left<op> NE EQ
@@ -89,36 +92,30 @@ int w;
 
 %%
 
-program: {offset = 0;
-		push_symbol();
-		push_type();
-		}decl sents {
-			strcat($2.code, "halt");
-			fprintf(output,"%s",$2.code);
-			//free($1.code);
+program: decl sents {
+					strcat($2.code, "halt");
+					fprintf(output,"%s",$2.code);
+					//free($1.code);
 			};
 
-decl: decl type {c_w=$2.type; c_w=$2.width;} list_var PC |;
+decl: decl type {c_w=$2.type; c_w=$2.width;} list_var PC | ;
 
 
 declf: declf DEFINE type ID LPAR F RPAR LCOR Ls RCOR | ;
 
-F: F COMA type ID | type ID;
 
 
-type: base {
-	w=$1.width;
-	t=$1.type:
-	} arreglo {
-		$$.type=$3.type:
-		$$.width=$3.width:
-	};
 
-base: INT {$$.type=1;$$.width=4;}
-	| FLOAT {$$.type=2;$$.width=8;}
-	| DOUBLE {$$.type=3;$$.widht=16;}
-	| CHAR {$$.type=0;$$.width=1;};
 
+
+
+
+
+
+
+type: base{t = $1.type; w = $1.width;} array {
+	$$.type=$3.type;$$.width=$3.width;
+};
 
 base: INT {$$.type = 0; $$.width = 4;}
 	| FLOAT {$$.type = 1; $$.width = 8;}
@@ -126,9 +123,9 @@ base: INT {$$.type = 0; $$.width = 4;}
 	| CHAR {$$.type=3; $$.width=1;};
 
 array: LCOR NUM RCOR array {
-		//$$.type = insert_type("array", $4.type, atoi($2.dir));
-		$$.width = atoi($2.dir) * $4.width;
-		}
+				//$$.type = insert_type("array", $4.type, atoi($2.dir));
+				$$.width = atoi($2.dir) * $4.width;
+			}
 		| {$$.type = t; $$.width = w;};
 
 list_var : list_var COMA ID | ID;
@@ -137,25 +134,23 @@ sents : sents sent {
 				strcpy($$.code, $1.code);
 				strcat($$.code, $2.code);
 				strcat($$.code, $2.next);
-				//strcat($$.code, ":");375
-				strcat($$.code, ":");
+				strcat($$.code, ":");375
 			}
 			| sent{
-				//strcat($1.code, $1.next);
-				strcat($$.code, $1.next);
-				strcat($$.code, $1.code);
+				strcat($1.code, $1.next);
 				strcat($1.code, ":");
 			};
 
 sent: ID ASIG exp PC { newLabel(); strcpy($$.next,label);
-		 //int len = strlen($1) +1;
-		 //$$.code = (char*) malloc(len*sizeof(char));
-		 strcpy($$.code, $3.code);
-		 strcat($$.code, $1);
-		 strcat($$.code, " = ");
-		 strcat($$.code, $3.dir);
-		 strcat($$.code, "\n");
-	}
+											 //int len = strlen($1) +1;
+											 //$$.code = (char*) malloc(len*sizeof(char));
+											 strcpy($$.code, $3.code);
+											 strcat($$.code, $1);
+											 strcat($$.code, " = ");
+											 strcat($$.code, $3.dir);
+											 strcat($$.code, "\n");
+
+										}
 		/* $1   $2   $3     $4   $5*/
 	| WHILE LPAR boolean RPAR sent {
 			strcpy($$.next, $3.lfalse);
@@ -185,7 +180,10 @@ sent: ID ASIG exp PC { newLabel(); strcpy($$.next,label);
 			strcat($$.code, ":");
 			strcat($$.code, $5.code);
 			strcat($$.code, $7.code);
-		};
+		}
+
+
+;
 
 
 sentp: ELSE sent {

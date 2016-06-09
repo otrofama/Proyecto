@@ -16,6 +16,10 @@ digito [0-9]
 
 "("	{ return LPAR; }
 ")"	{ return RPAR; }
+"["	{return LCOR;}
+"]"	{return RCOR;}
+"{"	{return LKEY}
+"}"	{return RKEY}
 ";"	{ return PC; }
 "," { return COMA; }
 while { return WHILE; }
@@ -28,13 +32,19 @@ else	{ return ELSE; }
 "!"		{ strcpy(yylval.op, yytext); return NOT; }
 
      /* Operadores relacionales */
-"=" {	strcpy(yylval.op, yytext); return ASIG; }
-">"	{ strcpy(yylval.op, yytext); return GT; }
-"<"	{ strcpy(yylval.op, yytext); return LT; }
-">=" { strcpy(yylval.op, yytext); return GE; }
-"<=" { strcpy(yylval.op, yytext); return LE; }
+"=" 	{	strcpy(yylval.op, yytext); return ASIG; }
+">"		{ strcpy(yylval.op, yytext); return GT; }
+"<"		{ strcpy(yylval.op, yytext); return LT; }
+">=" 	{ strcpy(yylval.op, yytext); return GE; }
+"<=" 	{ strcpy(yylval.op, yytext); return LE; }
 "=="	{ strcpy(yylval.op, yytext); return EQ; }
 "!="	{ strcpy(yylval.op, yytext); return NE; }
+
+"+="	{ strcpy(yylval.op, yytext); return MASIG; }
+"-="	{ strcpy(yylval.op, yytext); return MESIG; }
+"/="	{ strcpy(yylval.op, yytext); return DIVASIG; }
+"*="	{ strcpy(yylval.op, yytext); return MULASIG; }
+"%="	{ strcpy(yylval.op, yytext); return MODASIG; }
 
 		/* Operadores aritmeticos */
 "+" {	strcpy(yylval.op, yytext); return PLUS; }
@@ -49,6 +59,7 @@ float	{ return FLOAT; }
 char	{return CHAR; }
 double 	{return DOUBLE; }
 define	{return DEFINE;}
+return {return RETURN;}
 
 
 

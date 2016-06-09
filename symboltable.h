@@ -10,7 +10,7 @@
 #define TAM_PILA 10
 
 int i;
-int contSstack=0;
+//int contSstack=0;
 typedef struct _symbol_table Stable;
 typedef struct _symbol symbol;
 typedef struct _params params;
@@ -44,7 +44,9 @@ int getTypeSymbol(char* id,int table);
 int getTypeVar(char* id,int table);
 void push_symbol();
 void pop_symbol();
+void printStack();
 
+int j=0;
 symbol create_symbol(char* id,int type,int typeVar,int dir, params param)
 {
 	symbol tmp;
@@ -53,18 +55,26 @@ symbol create_symbol(char* id,int type,int typeVar,int dir, params param)
 	tmp.typeVar=typeVar;
 	tmp.dir=dir;
 	tmp.param=param;
+	printf("Simbolo %d,id:%s,ty:%d,tyv:%d,dir:%d\n",j,tmp.id,tmp.type,tmp.typeVar,tmp.dir );
+	j++;
 	return tmp;
 }
 
 int insert_symbol(int table,symbol s)
 {
-	int i;
+	int i=0;
+
+	printf("Simbolo %d,id:%s,ty:%d,tyv:%d,dir:%d\n",13,s.id,s.type,s.typeVar,s.dir );
+
 	i=get_Symbol(Sstack[table].s[Sstack[table].cont].id,contSstack);
 	printf("%dasd\n",i );
+	//if (i == -1 )
 	if (i != -1 )
 	{
+		printf("asdasdadasdasd\n");
 		Sstack[table].s[Sstack[table].cont] = s;
 		Sstack[table].cont++;
+		printf("s%d\n", Sstack[table].cont-1);
 		return Sstack[table].cont-1;
 	}
 	return -1;
@@ -72,14 +82,30 @@ int insert_symbol(int table,symbol s)
 
 int get_Symbol(char* id,int table)
 {
+	printf("getsymbolss\n" );
+	printf("%s:pila\n", Sstack[table].s[i].id);
 	for (i = 0; i < Sstack[table].cont; i++)
 	{
-		if (!strcmp(Sstack[table].s[i].id,id))
+		if (strcmp(Sstack[table].s[i].id,id) == 0)
 			return i;
 	}
 	return -1;
 }
 
+void printStack()
+{
+	int i,j;
+	for ( i = 0; i < contSstack; i++)
+	{
+		for (j = 0; j < Sstack[i].cont; j++)
+		{
+			printf("KJHGFDS%s\n",Sstack[i].s[j].id );
+			printf("KJHGFDS%d\n", Sstack[i].s[j].type);
+			printf("KJHGFDS%d\n", Sstack[i].s[j].typeVar);
+			printf("KJHGFDS%d\n", Sstack[i].s[j].dir);
+		}
+	}
+}
 
 void push_param(int i, params* param)
 {
@@ -95,8 +121,8 @@ params getParams(char* id,int table)
 
 void setParams(char* id,params p,int table)
 {
-	int n=get_Symbol(id,table);
-	Sstack[table].s[n].param=p;
+	int i=get_Symbol(id,table);
+	Sstack[table].s[i].param=p;
 }
 
 int getTypeSymbol(char* id,int table)

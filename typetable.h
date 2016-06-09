@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #define TAM_TTABLE 100
 
-int contTstack;
+//int contTstack;
 typedef struct _type type;
 typedef struct _type_table Ttable;
 
@@ -53,10 +53,10 @@ type create_type(int type1,int dim,int width,int base)
 
 void create_type_table(Ttable* table)
 {
-	type t_char = create_type(0,-1,1,-1);
-	type t_int = create_type(1,-1,4,-1);
-	type t_float = create_type(2,-1,8,-1);
-	type t_double = create_type(3,-1,16,-1);
+	type t_char = create_type(0,0,1,-1);
+	type t_int = create_type(1,0,4,-1);
+	type t_float = create_type(2,0,8,-1);
+	type t_double = create_type(3,-0,16,-1);
 	table->t[0]= t_char;
 	table->t[1]= t_int;
 	table->t[2]= t_float;
