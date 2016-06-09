@@ -16,7 +16,7 @@ struct _type
 	int width;
 	int base;
 };
-
+//commasdr
 struct _type_table
 {
 	type t[TAM_TTABLE];
