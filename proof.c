@@ -4,7 +4,7 @@ int contSstack=0;
 int contTstack;
 #include "symboltable.h"
 #include "typetable.h"
-//asdadasd
+//asdadasdasdasdasdsa
 int main(int argc, char const *argv[])
 {
 	#if 0
