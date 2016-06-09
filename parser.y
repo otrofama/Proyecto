@@ -12,6 +12,7 @@ char temp[100];
 void newTemp();
 int cTemp;
 
+
 void newLabel();
 int cLabel;
 
