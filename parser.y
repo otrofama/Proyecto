@@ -8,7 +8,7 @@ int stackoffset[50];
 int spoffset=0;
 char label[100];
 char temp[100];
-//asdqe
+
 void newTemp();
 int cTemp;
 
