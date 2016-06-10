@@ -51,31 +51,42 @@ extern int yydebug;
     FALSE = 261,
     INT = 262,
     FLOAT = 263,
-    PC = 264,
-    COMA = 265,
-    ID = 266,
-    NUM = 267,
-    ASIG = 268,
-    OR = 269,
-    AND = 270,
-    NE = 271,
-    EQ = 272,
-    GT = 273,
-    GE = 274,
-    LE = 275,
-    LT = 276,
-    PLUS = 277,
-    MENUS = 278,
-    MUL = 279,
-    DIV = 280,
-    MOD = 281,
-    NOT = 282,
-    LPAR = 283,
-    RPAR = 284,
-    LCOR = 285,
-    RCOR = 286,
-    IFX = 287,
-    ELSE = 288
+    DOUBLE = 264,
+    CHAR = 265,
+    PC = 266,
+    COMA = 267,
+    DEFINE = 268,
+    RETURN = 269,
+    ID = 270,
+    NUM = 271,
+    ASIG = 272,
+    MASIG = 273,
+    MEASIG = 274,
+    DIVASIG = 275,
+    MULASIG = 276,
+    MODASIG = 277,
+    OR = 278,
+    AND = 279,
+    NE = 280,
+    EQ = 281,
+    GT = 282,
+    GE = 283,
+    LE = 284,
+    LT = 285,
+    PLUS = 286,
+    MENUS = 287,
+    MUL = 288,
+    DIV = 289,
+    MOD = 290,
+    NOT = 291,
+    LPAR = 292,
+    RPAR = 293,
+    LCOR = 294,
+    RCOR = 295,
+    RKEY = 296,
+    LKEY = 297,
+    IFX = 298,
+    ELSE = 299
   };
 #endif
 /* Tokens.  */
@@ -85,38 +96,49 @@ extern int yydebug;
 #define FALSE 261
 #define INT 262
 #define FLOAT 263
-#define PC 264
-#define COMA 265
-#define ID 266
-#define NUM 267
-#define ASIG 268
-#define OR 269
-#define AND 270
-#define NE 271
-#define EQ 272
-#define GT 273
-#define GE 274
-#define LE 275
-#define LT 276
-#define PLUS 277
-#define MENUS 278
-#define MUL 279
-#define DIV 280
-#define MOD 281
-#define NOT 282
-#define LPAR 283
-#define RPAR 284
-#define LCOR 285
-#define RCOR 286
-#define IFX 287
-#define ELSE 288
+#define DOUBLE 264
+#define CHAR 265
+#define PC 266
+#define COMA 267
+#define DEFINE 268
+#define RETURN 269
+#define ID 270
+#define NUM 271
+#define ASIG 272
+#define MASIG 273
+#define MEASIG 274
+#define DIVASIG 275
+#define MULASIG 276
+#define MODASIG 277
+#define OR 278
+#define AND 279
+#define NE 280
+#define EQ 281
+#define GT 282
+#define GE 283
+#define LE 284
+#define LT 285
+#define PLUS 286
+#define MENUS 287
+#define MUL 288
+#define DIV 289
+#define MOD 290
+#define NOT 291
+#define LPAR 292
+#define RPAR 293
+#define LCOR 294
+#define RCOR 295
+#define RKEY 296
+#define LKEY 297
+#define IFX 298
+#define ELSE 299
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 27 "parser.y" /* yacc.c:1909  */
+#line 30 "parser.y" /* yacc.c:1909  */
 
 	char id[100];
 
@@ -148,7 +170,7 @@ union YYSTYPE
 	char op[3];
 
 
-#line 152 "y.tab.h" /* yacc.c:1909  */
+#line 174 "y.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

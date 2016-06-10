@@ -67,7 +67,7 @@ int w;
 %token<id> ID;
 %token<num> NUM;
 
-%left ASIG MASIG MEASIG DIVASIG MULASIG MODASIG
+%left<op> ASIG MASIG MEASIG DIVASIG MULASIG MODASIG
 %left OR
 %left AND
 %left<op> NE EQ
@@ -81,10 +81,9 @@ int w;
 
 
 %type<cond> boolean
-%type<sent> sent sentp sents L
-//%type<exp> exp term factor
-%type<exp> exp term factor idef
-%type<op> oprel opadd opmul
+%type<sent> sent sentp sents
+%type<exp> exp term factor
+%type<op> oprel opadd opmul opasig
 %type<type> type base array
 
 %start program
@@ -92,26 +91,28 @@ int w;
 %%
 
 program: {offset = 0;
-		push_symbol();
-		push_type();
+		//push_symbol();
+		//push_type();
+		//}decl sents {
 		}decl sents {
-			strcat($2.code, "halt");
-			fprintf(output,"%s",$2.code);
+			strcat($3.code, "halt");
+			fprintf(output,"%s",$3.code);
 			//free($1.code);
 			};
 
 decl: decl type {c_w=$2.type; c_w=$2.width;} list_var PC |;
 
 
-declf: declf DEFINE type ID LPAR F RPAR LCOR Ls RCOR | ;
+declf: declf DEFINE type ID LPAR fun RPAR LCOR sents RCOR | ;
+//sents: sents DEFINE type ID LPAR fun RPAR LCOR sents RCOR | ;
 
-F: F COMA type ID | type ID;
+fun: fun COMA type ID | type ID;
 
 
 type: base {
 	w=$1.width;
 	t=$1.type:
-	} arreglo {
+	} array {
 		$$.type=$3.type:
 		$$.width=$3.width:
 	};
@@ -158,9 +159,9 @@ sent: /*ID ASIG exp PC {
 		 strcat($$.code, " = ");
 		 strcat($$.code, $3.dir);
 		 strcat($$.code, "\n");
+		 |
 	}*/
 		/* $1   $2   $3     $4   $5*/
-	|
 	WHILE LPAR boolean RPAR sent {
 			strcpy($$.next, $3.lfalse);
 			//int len = strlen($5.next)+1;
@@ -178,16 +179,16 @@ sent: /*ID ASIG exp PC {
 			//free($5.code);
 			//printf("goto %s\n",$1.begin);
     }
-	| LCOR sents RCOR {
+	| LKEY sents RKEY {
 	//| LCOR L RCOR {
-		strcpy($$.next,$1.next);
-		strcpy($$.code,$1.code);
+		strcpy($$.code,$2.next);
+		strcpy($$.code,$2.code);
 	}
 	//| IF LPAR boolean RPAR sent {
 	| IF LPAR boolean RPAR sent sentp {
 		//strcpy($<sent>$.next, $3.lfalse);
 		strcpy($6.false, $3.lfalse);
-		strcpy($$.next, $5.next);
+		strcpy($$.code, $5.next);
 		strcat($$.code, ":");
 		strcpy($$.next, $5.next);
 		strcat($$.next,$6.next);
@@ -201,7 +202,22 @@ sent: /*ID ASIG exp PC {
 
 	}
 
-	| /*sentp
+	| idef opasig exp PC {
+		newLabel(); strcpy($$.ltrue,label);
+		newLabel(); strcpy($$.lfalse,label);
+	}
+	|RETURN exp PC{
+		newLabel();
+		strcpy($$.ltrue,label);
+		newLabel();
+		strcpy($$.lfalse,label);
+		strcpy($$.code,$2.code);
+		strcpy($$.code,"return ");
+		strcat($$.code,$2.dir);
+		strcat($$.code,"\n");
+
+		};
+	/*sentp
 		{
 			strcpy($$.next, $5.next);
 			strcat($$.next, ":");
@@ -225,31 +241,19 @@ sentp: ELSE sent {
 					strcat($$.code, ":");
 					strcat($$.code, $2.code);
 				}
+				|	{
+					strcpy($$.next,"");
+					strcpy($$.code,$<sent>0.next);
+					strcpy($$.code,":");
+				};
 
-			| RETURN exp PC{
-				newLabel();
-				strcpy($$.next,label);
-				strcpy($$.code,$2.code);
-				strcpy($$.code,"return ");
-				strcat($$.code,$2.dir);
-				strcat($$.code,"\n");
-
-				} /*%prec IFX {
+			//|
+			/*%prec IFX {
 					strcpy($$.next, "");
 					strcpy($$.code, $<sent>0.next);
 					strcat($$.code, ":");
 				}*/;
-idef: A {strcpy($$.dir,$1.base);
-		strcat($$.dir,"=");
-	}
-
-
-oprel: ASIG {strcpy($$.op,"=");}
-		| MASIG {strcpy($$.op,"+=");}
-		| MESIG {strcpy($$.op,"-=");}
-		| DIVASIG {strcpy($$.op,"/=");}
-		| MULASIG {strcpy($$.op,"*=");}
-		| MODASIG {strcpy($$.op,"%=");};
+idef: axp| ID ;
 
 boolean : boolean OR boolean
 			{
@@ -322,16 +326,23 @@ boolean : boolean OR boolean
 				strcat($$.code, "goto ");
 				strcat($$.code, $$.lfalse);
 				strcat($$.code, "\n");
-		}
-;
+		};
+
+opasig: ASIG
+		| MASIG
+		| MEASIG
+		| DIVASIG
+		| MULASIG
+		| MODASIG
+
 
 
 oprel : GT { strcpy($$, $1);}
-			| GE { strcpy($$, $1);}
-			| LT { strcpy($$, $1);}
-			| LE { strcpy($$, $1);}
-			| NE { strcpy($$, $1);}
-			| EQ { strcpy($$, $1);};
+		| GE { strcpy($$, $1);}
+		| LT { strcpy($$, $1);}
+		| LE { strcpy($$, $1);}
+		| NE { strcpy($$, $1);}
+		| EQ { strcpy($$, $1);};
 
 exp : exp opadd term {
 				newTemp();
@@ -371,6 +382,11 @@ term: term opmul factor{
 				$$= $1;
 			};
 
+af: af COMA exp | exp;
+
+
+axp: ID LCOR exp RCOR
+	| axp LCOR exp RCOR;
 factor: LPAR exp RPAR {$$ = $2;}
 		|ID {
 			strcpy($$.dir, $1);

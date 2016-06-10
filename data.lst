@@ -1,0 +1,43 @@
+parser.y: warning: 3 nonterminals useless in grammar [-Wother]
+parser.y: warning: 6 rules useless in grammar [-Wother]
+parser.y:106.1-5: warning: nonterminal useless in grammar: declf [-Wother]
+ declf: declf DEFINE type ID LPAR fun RPAR LCOR sents RCOR | ;
+ ^^^^^
+parser.y:106.34-36: warning: nonterminal useless in grammar: fun [-Wother]
+ declf: declf DEFINE type ID LPAR fun RPAR LCOR sents RCOR | ;
+                                  ^^^
+parser.y:385.1-2: warning: nonterminal useless in grammar: af [-Wother]
+ af: af COMA exp | exp;
+ ^^
+parser.y:106.8-57: warning: rule useless in grammar [-Wother]
+ declf: declf DEFINE type ID LPAR fun RPAR LCOR sents RCOR | ;
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+parser.y:106.60: warning: rule useless in grammar [-Wother]
+ declf: declf DEFINE type ID LPAR fun RPAR LCOR sents RCOR | ;
+                                                            ^
+parser.y:109.6-21: warning: rule useless in grammar [-Wother]
+ fun: fun COMA type ID | type ID;
+      ^^^^^^^^^^^^^^^^
+parser.y:109.25-31: warning: rule useless in grammar [-Wother]
+ fun: fun COMA type ID | type ID;
+                         ^^^^^^^
+parser.y:385.5-15: warning: rule useless in grammar [-Wother]
+ af: af COMA exp | exp;
+     ^^^^^^^^^^^
+parser.y:385.19-21: warning: rule useless in grammar [-Wother]
+ af: af COMA exp | exp;
+                   ^^^
+parser.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
+parser.y: warning: 8 reduce/reduce conflicts [-Wconflicts-rr]
+parser.y:126.7-38: warning: rule useless in parser due to conflicts [-Wother]
+ base: INT {$$.type = 0; $$.width = 4;}
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+parser.y:127.11-44: warning: rule useless in parser due to conflicts [-Wother]
+ 	| FLOAT {$$.type = 1; $$.width = 8;}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+parser.y:128.11-42: warning: rule useless in parser due to conflicts [-Wother]
+ 	| DOUBLE {$$.type=2; $$.width=16;}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+parser.y:129.11-39: warning: rule useless in parser due to conflicts [-Wother]
+ 	| CHAR {$$.type=3; $$.width=1;};
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

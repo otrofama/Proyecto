@@ -39,9 +39,9 @@ else	{ return ELSE; }
 "<=" 	{ strcpy(yylval.op, yytext); return LE; }
 "=="	{ strcpy(yylval.op, yytext); return EQ; }
 "!="	{ strcpy(yylval.op, yytext); return NE; }
-
+   /*OPERADORES de asignación*/
 "+="	{ strcpy(yylval.op, yytext); return MASIG; }
-"-="	{ strcpy(yylval.op, yytext); return MESIG; }
+"-="	{ strcpy(yylval.op, yytext); return MEASIG; }
 "/="	{ strcpy(yylval.op, yytext); return DIVASIG; }
 "*="	{ strcpy(yylval.op, yytext); return MULASIG; }
 "%="	{ strcpy(yylval.op, yytext); return MODASIG; }
