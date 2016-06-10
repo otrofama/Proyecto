@@ -4,13 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+int contSstack=0;
 #define TAM_ID 50
 #define TAM_SYM_TABLE 100
 #define TAM_PILA 10
 
 int i;
-//int contSstack=0;
 typedef struct _symbol_table Stable;
 typedef struct _symbol symbol;
 typedef struct _params params;

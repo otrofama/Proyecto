@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include "typetable.h"
+
+#include "symboltable.h"
+#include "typetable.h"
 int t,w,c_t,c_w,offset=0;
 int stackoffset[50];
 int spoffset=0;
@@ -111,22 +113,16 @@ fun: fun COMA type ID | type ID;
 
 type: base {
 	w=$1.width;
-	t=$1.type:
+	t=$1.type;
 	} array {
-		$$.type=$3.type:
-		$$.width=$3.width:
+		$$.type=$3.type;
+		$$.width=$3.width;
 	};
 
 base: INT {$$.type=1;$$.width=4;}
 	| FLOAT {$$.type=2;$$.width=8;}
-	| DOUBLE {$$.type=3;$$.widht=16;}
+	| DOUBLE {$$.type=3;$$.width=16;}
 	| CHAR {$$.type=0;$$.width=1;};
-
-
-base: INT {$$.type = 0; $$.width = 4;}
-	| FLOAT {$$.type = 1; $$.width = 8;}
-	| DOUBLE {$$.type=2; $$.width=16;}
-	| CHAR {$$.type=3; $$.width=1;};
 
 array: LCOR NUM RCOR array {
 		//$$.type = insert_type("array", $4.type, atoi($2.dir));
@@ -150,19 +146,7 @@ sents : sents sent {
 				strcat($1.code, ":");
 			};
 
-sent: /*ID ASIG exp PC {
-		newLabel(); strcpy($$.next,label);
-		 //int len = strlen($1) +1;
-		 //$$.code = (char*) malloc(len*sizeof(char));
-		 strcpy($$.code, $3.code);
-		 strcat($$.code, $1);
-		 strcat($$.code, " = ");
-		 strcat($$.code, $3.dir);
-		 strcat($$.code, "\n");
-		 |
-	}*/
-		/* $1   $2   $3     $4   $5*/
-	WHILE LPAR boolean RPAR sent {
+sent: WHILE LPAR boolean RPAR sent {
 			strcpy($$.next, $3.lfalse);
 			//int len = strlen($5.next)+1;
 			//$$.code = (char*) malloc(len*sizeof(char));
@@ -187,8 +171,8 @@ sent: /*ID ASIG exp PC {
 	//| IF LPAR boolean RPAR sent {
 	| IF LPAR boolean RPAR sent sentp {
 		//strcpy($<sent>$.next, $3.lfalse);
-		strcpy($6.false, $3.lfalse);
-		strcpy($$.code, $5.next);
+		strcpy($$.code, $3.lfalse);
+		strcat($$.code, $5.next);
 		strcat($$.code, ":");
 		strcpy($$.next, $5.next);
 		strcat($$.next,$6.next);
@@ -203,33 +187,20 @@ sent: /*ID ASIG exp PC {
 	}
 
 	| idef opasig exp PC {
-		newLabel(); strcpy($$.ltrue,label);
-		newLabel(); strcpy($$.lfalse,label);
+		newLabel(); strcpy($$.code,label);
+		newLabel(); strcpy($$.code,label);
 	}
 	|RETURN exp PC{
 		newLabel();
-		strcpy($$.ltrue,label);
+		strcpy($$.code,label);
 		newLabel();
-		strcpy($$.lfalse,label);
+		strcpy($$.code,label);
 		strcpy($$.code,$2.code);
 		strcpy($$.code,"return ");
 		strcat($$.code,$2.dir);
 		strcat($$.code,"\n");
 
 		};
-	/*sentp
-		{
-			strcpy($$.next, $5.next);
-			strcat($$.next, ":");
-			strcat($$.next, $7.next);
-
-			strcpy($$.code, $3.code);
-			strcat($$.code, $3.ltrue);
-			strcat($$.code, ":");
-			strcat($$.code, $5.code);
-			strcat($$.code, $7.code);
-		};*/
-
 
 sentp: ELSE sent {
 					strcpy($$.next, $2.next);
@@ -379,14 +350,11 @@ term: term opmul factor{
 				strcat($$.code, "\n");
 			}
 			| factor{
-				$$= $1;
-			};
+				$$= $1;};
+			//| axp
+			//| af
+			//| ID LPAR af RPAR;
 
-af: af COMA exp | exp;
-
-
-axp: ID LCOR exp RCOR
-	| axp LCOR exp RCOR;
 factor: LPAR exp RPAR {$$ = $2;}
 		|ID {
 			strcpy($$.dir, $1);
@@ -395,7 +363,14 @@ factor: LPAR exp RPAR {$$ = $2;}
 		| NUM {
 			strcpy($$.dir, $1.dir);
 			strcpy($$.code, "");
-		};
+		}|af
+		|axp;
+
+af: af COMA exp | exp;
+
+
+axp: ID LCOR exp RCOR| axp LCOR exp RCOR;
+
 
 opadd: PLUS { strcpy($$, $1);}
 		| MENUS { strcpy($$, $1);};

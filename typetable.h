@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define TAM_TTABLE 100
-
+int contTstack;
 //int contTstack;
 typedef struct _type type;
 typedef struct _type_table Ttable;

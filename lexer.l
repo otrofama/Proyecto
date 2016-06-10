@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "y.tab.h"
-#include "symboltable.h"
 #include <string.h>
 //Symbols* symbols;
 
@@ -18,8 +17,8 @@ digito [0-9]
 ")"	{ return RPAR; }
 "["	{return LCOR;}
 "]"	{return RCOR;}
-"{"	{return LKEY}
-"}"	{return RKEY}
+"{"	{return LKEY;}
+"}"	{return RKEY;}
 ";"	{ return PC; }
 "," { return COMA; }
 while { return WHILE; }
